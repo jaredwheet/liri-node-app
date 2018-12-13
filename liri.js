@@ -19,27 +19,29 @@ function spotifySearch(searchCriteria) {
                 var songName = response.tracks.items[0].name;
                 var songPreviewURL = response.tracks.items[0].preview_url;
                 var album = response.tracks.items[0].album.name;
+                console.log("--------------RESULTS--------------")
+                console.log("No Song Provided - Default search results below.")
+                console.log(`Artist: ${artist} \nSong Name: ${songName} \nSong Preview URL: ${songPreviewURL} \nAlbum: ${album}`)
 
-                console.log(artist, songName, songPreviewURL, album)
             })
-            .catch(function (err) {
-                console.log(err);
+            .catch((err) => {
+                console.log("You have encountered an error >>> Try another search!")
             })
     }
     else {
         spotify
-            .search({ type: 'track', limit: '2', query: searchCriteria })
+            .search({ type: 'track', limit: '5', query: searchCriteria })
             .then(function (response) {
                 // console.log(JSON.stringify(response, null, 2))
                 var artist = response.tracks.items[0].album.artists[0].name;
                 var songName = response.tracks.items[0].name;
                 var songPreviewURL = response.tracks.items[0].preview_url;
                 var album = response.tracks.items[0].album.name;
-
-                console.log(artist, songName, songPreviewURL, album)
+                console.log("--------------RESULTS--------------")
+                console.log(`Artist: ${artist} \nSong Name: ${songName} \nSong Preview URL: ${songPreviewURL} \nAlbum: ${album}`)
             })
-            .catch(function (err) {
-                console.log(err);
+            .catch((err) => {
+                console.log("You have encountered an error >>> Try another search!")
             })
     }
 };
@@ -51,41 +53,38 @@ function bandsInTownSearch(searchCriteria) {
         url: "https://rest.bandsintown.com/artists/" + searchCriteria + "/events?app_id=codingbootcamp",
         // responseType:'stream'
     })
-        .then(function (response) {            
-            var venueName = response.data[0].venue.name;            
+        .then(function (response) {
+            var venueName = response.data[0].venue.name;
             var venueCity = response.data[0].venue.city;
             var venueRegion = response.data[0].venue.region;
-            var concertDate = moment(response.data[0].datetime).format('MMMM Do YYYY, h:mm:ss a');;
-            console.log(venueName,venueCity, venueRegion, concertDate)
-        });
-}
+            var concertDate = moment(response.data[0].datetime).format('MMMM Do YYYY, h:mm:ss a');
+            console.log("--------------RESULTS--------------")
+            console.log(`Venue Name: ${venueName} \nVenue City: ${venueCity} \nVenue State: ${venueRegion} \nConcert Date and Time: ${concertDate}`);
+        }).catch((err) => {
+            console.log("You have encountered an error >>> Try another search!")
+        })
+};
+
 // bandsInTownSearch()
 
 function movieSearch(searchCriteria) {
-    console.log(searchCriteria)
     if (searchCriteria === undefined) {
         axios
             .get("http://www.omdbapi.com/?t=Mr+Nobody&apikey=trilogy")
             .then(
                 function (response) {
-                    console.log(response);
-                    // * Title of the movie.
                     var title = response.data.Title
-                    // * Year the movie came out.
                     var releaseYear = response.data.Year;
-                    // * IMDB Rating of the movie.
                     var imdbRating = response.data.Ratings[0].Value;
-                    // * Rotten Tomatoes Rating of the movie.
                     var rottenTomatoesRating = response.data.Ratings[1].Value;
-                    // * Country where the movie was produced.
                     var countryProduced = response.data.Country;
-                    // * Language of the movie.
                     var language = response.data.Language;
-                    // * Plot of the movie.
                     var plot = response.data.Plot;
-                    // * Actors in the movie.
                     var actors = response.data.Actors;
-                    console.log(title, releaseYear, imdbRating, rottenTomatoesRating, countryProduced, language, plot, actors)
+                    console.log("--------------RESULTS--------------")
+                    console.log(`Movie Title: ${title} \nReleased:  ${releaseYear} \nIMDB Rating: ${imdbRating} \nRotten Tomatoes Rating: ${rottenTomatoesRating} \nCountry Produced: ${countryProduced} \nLanguage:  ${language} \nPlot: ${plot} \nActors: ${actors}`)
+                }).catch((err) => {
+                    console.log("You have encountered an error >>> Try another search!")
                 });
     }
     else {
@@ -93,70 +92,53 @@ function movieSearch(searchCriteria) {
             .get("http://www.omdbapi.com/?t=" + searchCriteria + "&y=&plot=short&apikey=trilogy")
             .then(
                 function (response) {
-                    console.log(response);
-                    // * Title of the movie.
                     var title = response.data.Title
-                    // * Year the movie came out.
                     var releaseYear = response.data.Year;
-                    // * IMDB Rating of the movie.
                     var imdbRating = response.data.Ratings[0].Value;
-                    // * Rotten Tomatoes Rating of the movie.
-                    // var rottenTomatoesRating = response.data.Ratings[1].Value;
-                    // * Country where the movie was produced.
+                    var rottenTomatoesRating = response.data.Ratings[1].Value;
                     var countryProduced = response.data.Country;
-                    // * Language of the movie.
                     var language = response.data.Language;
-                    // * Plot of the movie.
                     var plot = response.data.Plot;
-                    // * Actors in the movie.
                     var actors = response.data.Actors;
-                    console.log(title, releaseYear, imdbRating, countryProduced, language, plot, actors)
-                }
-            );
+                    console.log("--------------RESULTS--------------")
+                    console.log(`Movie Title: ${title} \nReleased:  ${releaseYear} \nIMDB Rating: ${imdbRating} \nRotten Tomatoes Rating: ${rottenTomatoesRating} \nCountry Produced: ${countryProduced} \nLanguage:  ${language} \nPlot: ${plot} \nActors: ${actors}`)
+                }).catch((err) => {
+                    console.log("You have encountered an error >>> Try another search!")
+                })
     }
 }
 // movieSearch()
 
 function doWhatItSays() {
     fs.readFile("random.txt", "utf8", function (error, data) {
-        // If the code experiences any errors it will log the error to the console.
         if (error) {
             return console.log(error);
         }
-        // We will then print the contents of data
-        console.log(data);
-
-        // Then split it by commas (to make it more readable)
-        var dataArr = data.split(",");
-
-        // We will then re-display the content as an array for later use.
-        console.log(dataArr);
+        var dataArr = data.split(",");        
         var dataForSearch = dataArr[1];
-        var formattedDataForSearch = dataForSearch.slice(2, -3)
-        console.log(formattedDataForSearch)
-
-        if (dataArr[0] === "concert-this"){
+        var formattedDataForSearch = dataForSearch.slice(2, -3)        
+        if (dataArr[0] === "concert-this") {
             bandsInTownSearch(formattedDataForSearch)
         }
-        else if (dataArr[0]==="spotify-this-song"){
+        else if (dataArr[0] === "spotify-this-song") {
             spotifySearch(formattedDataForSearch)
         }
-        else if (dataArr[0] === "movie-this"){
+        else if (dataArr[0] === "movie-this") {
             movieSearch(formattedDataForSearch)
-        }             
+        }
     });
 }
-function runProgram(){
-    if (searchCommand === "concert-this"){
+function runProgram() {
+    if (searchCommand === "concert-this") {
         bandsInTownSearch(searchCriteria)
     }
-    else if (searchCommand ==="spotify-this-song"){
+    else if (searchCommand === "spotify-this-song") {
         spotifySearch(searchCriteria)
     }
-    else if (searchCommand === "movie-this"){
+    else if (searchCommand === "movie-this") {
         movieSearch(searchCriteria)
-    } 
-    else if (searchCommand === "do-what-it-says"){
+    }
+    else if (searchCommand === "do-what-it-says") {
         doWhatItSays()
     }
     else {
